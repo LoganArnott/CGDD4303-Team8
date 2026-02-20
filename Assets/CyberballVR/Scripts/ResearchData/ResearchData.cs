@@ -19,7 +19,7 @@ public class ResearchData : MonoBehaviour
     {
         AIPlayers = LoadAllPlayers();
         LevelData = LoadLevelData();
-        throwList.Add("The player threw the ball");
+        throwList.Add("The player threw the ball to ");
     }
 
 
@@ -48,6 +48,7 @@ public class ResearchData : MonoBehaviour
             PlayerData player = new PlayerData
             {
                 Name = fileName.Split(".")[0],
+                ThrowCount = 0,
                 SkinColor = xmlDoc.Root.Element("SkinColor").Value,
                 Hair = xmlDoc.Root.Element("Hair")?.Value,
                 Clothing = xmlDoc.Root.Element("Clothing")?.Value,
@@ -152,7 +153,52 @@ public class ResearchData : MonoBehaviour
         StreamWriter sw = File.CreateText(Application.persistentDataPath + "\\Log - " + timestamp + ".txt");
         for(int i = 0; i < catchList.Count; i++)
         {
-            sw.WriteLine(i + ": " + throwList[i] + catchList[i]);
+            switch(i) {
+                case 0:
+                    sw.WriteLine("=== Round 1 (Tosses 1-48) ===");
+                    break;
+                case 48:
+                    sw.WriteLine("\n");
+                    foreach(PlayerData aiPlayer in AIPlayers)
+                    {
+                        sw.WriteLine("Player tossed to " + aiPlayer.Name + " " + aiPlayer.ThrowCount + " times");
+                        aiPlayer.ThrowCount = 0;
+                    }
+                    sw.WriteLine("\n=== Round 2 (Tosses 49-68) ===");
+                    break;
+                case 68:
+                    sw.WriteLine("\n");
+                    foreach(PlayerData aiPlayer in AIPlayers)
+                    {
+                        sw.WriteLine("Player tossed to " + aiPlayer.Name + " " + aiPlayer.ThrowCount + " times");
+                        aiPlayer.ThrowCount = 0;
+                    }
+                    sw.WriteLine("\n=== Round 3 (Tosses 69-116) ===");
+                    break;
+            }
+
+            if(throwList[i] == "The player threw the ball to ")
+            {
+                foreach(PlayerData aiPlayer in AIPlayers)
+                {
+                    if(aiPlayer.Name == catchList[i])
+                    {
+                        aiPlayer.ThrowCount += 1;
+                    }
+                }
+            }
+
+            sw.WriteLine((i + 1) + ": " + throwList[i] + catchList[i]);
+
+            if(i == 115)
+            {
+                sw.WriteLine("\n");
+                foreach(PlayerData aiPlayer in AIPlayers)
+                {
+                    sw.WriteLine("Player tossed to " + aiPlayer.Name + " " + aiPlayer.ThrowCount + " times");
+                    aiPlayer.ThrowCount = 0;
+                }
+            }
         }
 
         sw.Close();
@@ -162,6 +208,7 @@ public class ResearchData : MonoBehaviour
 public class PlayerData
 {
     public string Name;
+    public int ThrowCount;
     public string Hair;
     public string SkinColor;
     public string Clothing;

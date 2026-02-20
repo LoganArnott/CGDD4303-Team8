@@ -36,16 +36,16 @@ public class GameManager : MonoBehaviour
 
     Outline playerOutline;
 
-    private void OnEnable()
-    {
-        EventManager.onAISuccessfulCatch += ChangePlayerOutline;
+    // private void OnEnable()
+    // {
+    //     EventManager.onAISuccessfulCatch += ChangePlayerOutline;
 
-    }
+    // }
 
-    private void OnDisable()
-    {
-        EventManager.onAISuccessfulCatch -= ChangePlayerOutline;
-    }
+    // private void OnDisable()
+    // {
+    //     EventManager.onAISuccessfulCatch -= ChangePlayerOutline;
+    // }
 
     private void Start()
     {
@@ -293,10 +293,10 @@ public class GameManager : MonoBehaviour
         if(BallManager.dropped == false)
         {
             playerCatchCount++;
-            ChangePlayerOutline();
+            // ChangePlayerOutline();
             Debug.Log("This Counts");
-            ResearchData.catchList.Add(" to the player");
-            ResearchData.throwList.Add("The player threw the ball");
+            ResearchData.catchList.Add("the player");
+            ResearchData.throwList.Add("The player threw the ball to ");
         }
         
     }
@@ -316,69 +316,69 @@ public class GameManager : MonoBehaviour
 
         return count;
     }
-    public void ChangePlayerOutline()
-    {
-        int highestCatchCount = 0;
-        int lowestCatchCount = int.MaxValue;
-        highestCatchPlayer = null; 
-        lowestCatchPlayer = null; 
+    // public void ChangePlayerOutline()
+    // {
+    //     int highestCatchCount = 0;
+    //     int lowestCatchCount = int.MaxValue;
+    //     highestCatchPlayer = null; 
+    //     lowestCatchPlayer = null; 
 
-        foreach (GameObject go in playerList)
-        {
-            if(go.GetComponent<Outline>() != null)
-            {
-                go.GetComponent<Outline>().enabled = false;
-            }
-            else
-            {
-                if (go.name == "Player" && go.GetComponentInChildren<Outline>() != null)
-                {
-                    go.GetComponentInChildren<Outline>().enabled = false;
-                }
-            }
-        }
+    //     foreach (GameObject go in playerList)
+    //     {
+    //         if(go.GetComponent<Outline>() != null)
+    //         {
+    //             go.GetComponent<Outline>().enabled = false;
+    //         }
+    //         else
+    //         {
+    //             if (go.name == "Player" && go.GetComponentInChildren<Outline>() != null)
+    //             {
+    //                 go.GetComponentInChildren<Outline>().enabled = false;
+    //             }
+    //         }
+    //     }
 
-        foreach (GameObject go in playerList)
-        {
-            AI aiComponent = go.GetComponent<AI>();
+    //     foreach (GameObject go in playerList)
+    //     {
+    //         AI aiComponent = go.GetComponent<AI>();
 
-            //int catchCount = aiComponent != null ? aiComponent.catchCount : playerCatchCount;
-            int catchCount = (go == Player) ? playerCatchCount : go.GetComponent<AI>().catchCount;
+    //         //int catchCount = aiComponent != null ? aiComponent.catchCount : playerCatchCount;
+    //         int catchCount = (go == Player) ? playerCatchCount : go.GetComponent<AI>().catchCount;
 
-            if (catchCount > highestCatchCount)
-            {
-                highestCatchCount = catchCount;
-                highestCatchPlayer = go;
-            }
+    //         if (catchCount > highestCatchCount)
+    //         {
+    //             highestCatchCount = catchCount;
+    //             highestCatchPlayer = go;
+    //         }
 
-            if (catchCount < lowestCatchCount)
-            {
-                lowestCatchCount = catchCount;
-                lowestCatchPlayer = go;
-            }
-        }
+    //         if (catchCount < lowestCatchCount)
+    //         {
+    //             lowestCatchCount = catchCount;
+    //             lowestCatchPlayer = go;
+    //         }
+    //     }
 
-        ApplyOutline(highestCatchPlayer, Color.blue);
-        if (highestCatchPlayer != lowestCatchPlayer)
-        {
-            ApplyOutline(lowestCatchPlayer, Color.red);
-        }
-    }
+    //     ApplyOutline(highestCatchPlayer, Color.blue);
+    //     if (highestCatchPlayer != lowestCatchPlayer)
+    //     {
+    //         ApplyOutline(lowestCatchPlayer, Color.red);
+    //     }
+    // }
 
-    private void ApplyOutline(GameObject player, Color color)
-    {
-        if (player != null)
-        {
-            Outline outline = player.GetComponent<Outline>() ?? player.GetComponentInChildren<Outline>();
-            if (outline != null)
-            {
-                Debug.Log("outline parent " + outline.gameObject.name);
-                outline.enabled = true;
-                outline.OutlineColor = color;
-                outline.OutlineWidth = player == Player ? 5f : 2f; // Wider outline for the human player
-            }
-        }
-    }
+    // private void ApplyOutline(GameObject player, Color color)
+    // {
+    //     if (player != null)
+    //     {
+    //         Outline outline = player.GetComponent<Outline>() ?? player.GetComponentInChildren<Outline>();
+    //         if (outline != null)
+    //         {
+    //             Debug.Log("outline parent " + outline.gameObject.name);
+    //             outline.enabled = true;
+    //             outline.OutlineColor = color;
+    //             outline.OutlineWidth = player == Player ? 5f : 2f; // Wider outline for the human player
+    //         }
+    //     }
+    // }
 
 
 }

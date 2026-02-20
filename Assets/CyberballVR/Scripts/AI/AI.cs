@@ -54,8 +54,8 @@ public class AI : MonoBehaviour
         if (GameManager.currentBallHolder != gameObject)
         {
             string name = transform.GetComponent<AICustomize>().UIName.text;
-            ResearchData.catchList.Add(" to " + name);
-            ResearchData.throwList.Add(name + " threw the ball");
+            ResearchData.catchList.Add(name);
+            ResearchData.throwList.Add(name + " threw the ball to ");
             catchCount++;
         }
 
