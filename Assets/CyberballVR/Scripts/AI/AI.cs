@@ -21,6 +21,7 @@ public class AI : MonoBehaviour
     public float rotationSpeed = 5.0f;
 
     public int catchCount;
+    public int playerNum;
     public enum TargetingPreference
     {
         Random, 
@@ -281,23 +282,29 @@ public class AI : MonoBehaviour
             List<GameObject> potentialTargets = new List<GameObject>(gameManager.playerList);
             potentialTargets.Remove(this.gameObject); // Exclude this AI from potential targets.
 
-            // Calculate the current chance to target the player from the XML data
-            float accumulatedChance = 0f;
-            foreach (var chance in ResearchData.LevelData.ChancesToPlayer)
+            if (totalCatches < 49)
             {
-                if (totalCatches <= chance.Throws)
+                return potentialTargets[UnityEngine.Random.Range(0, potentialTargets.Count)];
+            }
+            else
+            {
+                if (playerNum != 2)
                 {
-                    accumulatedChance = chance.Chance;
-                    break;
+                    foreach (var target in potentialTargets)
+                    {
+                        if (target.GetComponent<AI>() != null && target.GetComponent<AI>().playerNum == 2)
+                        {
+                            potentialTargets.Remove(target);
+                            break;
+                        }
+                    }
                 }
+                return potentialTargets[UnityEngine.Random.Range(totalCatches > 69? 1 : 0, potentialTargets.Count)];
             }
 
-            // Roll a random number to compare against the calculated chance
-            float roll = UnityEngine.Random.Range(0f, 100f);
-            Debug.Log($"Rolled {roll} against chance of {accumulatedChance}% for targeting the player at {totalCatches} catches.");
 
             // Decide based on the chance whether to target the player or a random AI
-            if (roll < accumulatedChance && gameManager.Player)
+            /*if (roll < accumulatedChance && gameManager.Player)
             {
                 Debug.Log("Targeting Player due to chance settings");
                 foreach(Transform child in gameManager.Player.transform)
@@ -313,96 +320,11 @@ public class AI : MonoBehaviour
             {
                 // Choose a random AI 
                 return potentialTargets[UnityEngine.Random.Range(1, potentialTargets.Count)];
-            }
+            }*/
         }
         else
         {
-            float chanceThreshold = 0.8f; // 80%
-            float roll = UnityEngine.Random.Range(0f, 1f); // Random roll between 0 and 1
-            List<GameObject> potentialTargets = new List<GameObject>(gameManager.playerList);
-            potentialTargets.Remove(this.gameObject); // Exclude this AI from potential targets.
-
-            switch (targetingPreference)
-            {
-                case TargetingPreference.Random:
-                    // Return a random player GameObject
-                    if (potentialTargets.Count > 0)
-                    {
-                        int randomIndex = UnityEngine.Random.Range(0, potentialTargets.Count);
-
-                        if (randomIndex== 0)
-                        {
-                            foreach (Transform child in gameManager.Player.transform)
-                            {
-                                // Target the player based on XML defined chance
-                                if (child.tag.Equals("PlayerPos"))
-                                    return child.gameObject;
-
-                            }
-                            
-                        }
-                        return potentialTargets[randomIndex];
-                    }
-                    break;
-                case TargetingPreference.FavorAI:
-                    // Implement logic to favor AI, but with a 20% chance to throw to the player
-                    if (potentialTargets.Count > 0)
-                    {
-                        if (roll < chanceThreshold)
-                        {
-                            // Favor throw to AI 80%
-                            int randomIndex = UnityEngine.Random.Range(1, potentialTargets.Count);
-                            return potentialTargets[randomIndex];
-
-                        }
-                        else
-                        {
-                            // With 20% chance, select the player target instead
-                            foreach (Transform child in gameManager.Player.transform)
-                            {
-                                // Target the player based on XML defined chance
-                                if (child.tag.Equals("PlayerPos"))
-                                    return child.gameObject;
-
-                            }
-                            return gameManager.Player;
-                        }
-                    }
-                    break;
-                case TargetingPreference.FavorPlayer:
-                    // Similar to FavorAI, but primarily targets the player, with a 20% chance for a throw to the AI
-                    if (potentialTargets.Count > 0)
-                    {
-                        if (roll < chanceThreshold)
-                        {
-                            foreach (Transform child in gameManager.Player.transform)
-                            {
-                                // Target the player based on XML defined chance
-                                if (child.tag.Equals("PlayerPos"))
-                                    return child.gameObject;
-
-                            }
-                            return gameManager.Player;
-                        }
-                        else
-                        {
-                            // With 20% chance, excludes playerList[0]
-                            int randomIndex = UnityEngine.Random.Range(1, potentialTargets.Count);
-                            return potentialTargets[randomIndex];
-                        }
-                    }
-                    break;
-            }
-
             return null;
-        }
-
-
-
-        
+        } 
     }
-
-                
-
-
-    }
+}

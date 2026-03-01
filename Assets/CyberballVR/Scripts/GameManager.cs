@@ -54,9 +54,11 @@ public class GameManager : MonoBehaviour
         
         if (ResearchData.AIPlayers != null && ResearchData.AIPlayers.Count != 0)
         {
+            int setNum = 0;
             foreach (PlayerData playerData in ResearchData.AIPlayers)
             {
-                SetupAIPlayers(playerData);
+                SetupAIPlayers(playerData, setNum);
+                setNum++;
             }
         }
 
@@ -103,7 +105,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void SetupAIPlayers(PlayerData data)
+    private void SetupAIPlayers(PlayerData data, int num)
     {
         Debug.Log("Setting Up AI Players");
         GameObject aiPlayerInstance = Instantiate(AICharacter);
@@ -122,6 +124,7 @@ public class GameManager : MonoBehaviour
             customization.RandomizeCustomization();
         }
 
+        aiPlayerInstance.GetComponent<AI>().playerNum = num;
         playerList.Add(aiPlayerInstance);
 
     }
