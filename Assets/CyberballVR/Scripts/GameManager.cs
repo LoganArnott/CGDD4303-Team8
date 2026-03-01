@@ -295,11 +295,14 @@ public class GameManager : MonoBehaviour
         currentBallHolder = Player;
         if(BallManager.dropped == false)
         {
-            playerCatchCount++;
-            // ChangePlayerOutline();
-            Debug.Log("This Counts");
-            ResearchData.catchList.Add("the player");
-            ResearchData.throwList.Add("The player threw the ball to ");
+            if(ResearchData.throwList[ResearchData.throwList.Count - 1] != "The player threw the ball to ")
+            {
+                playerCatchCount++;
+                // ChangePlayerOutline();
+                Debug.Log("This Counts");
+                ResearchData.catchList.Add("the player");
+                ResearchData.throwList.Add("The player threw the ball to ");
+            }
         }
         
     }
