@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     public BallManager ballManager;
     public GameObject currentLevel;
     public XRGrabInteractable ball;
-    [Range(-1, 2)] public int currentLevelSelect;
+    public int currentLevelSelect;
     public float spawnRadius;
     public Transform AllSpawnPosition;
 
@@ -214,7 +214,7 @@ public class GameManager : MonoBehaviour
         {
             float angle = i * Mathf.PI * 2f / playerCount;
             Vector3 spawnPosition = AllSpawnPosition.position + new Vector3(Mathf.Cos(angle) * spawnRadius, 0, Mathf.Sin(angle) * spawnRadius);
-            
+            int setNum = 0;
             
             //Quaternion spawnRotation = Quaternion.Euler(0, -angle * Mathf.Rad2Deg + 90, 0); // Orient towards center
             Quaternion spawnRotation;
@@ -238,6 +238,8 @@ public class GameManager : MonoBehaviour
                 aiPlayerInstance.transform.position = spawnPosition + new Vector3(0, .75f, 0);
                 aiPlayerInstance.transform.rotation = spawnRotation;
                 aiPlayerInstance.SetActive(true);
+                aiPlayerInstance.GetComponent<AI>().playerNum = setNum;
+                setNum++;
             }
         }
 
@@ -248,6 +250,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("SpawnPlayersNoData");
         Instantiate(currentLevel);
+        int setNum = 0;
 
         foreach (Transform child in currentLevel.transform)
         {
@@ -256,6 +259,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log("player spawned with no data");
                 //characterController.transform.position = child.transform.position + new Vector3(0, 0, 0); //Player podium
                 Player.transform.position = child.transform.position + new Vector3(0, 0, 0);
+                Player.transform.eulerAngles = new Vector3(0f, 90f, 0f);
                 playerList.Add(Player);
                 playerMove.SetActive(false);
                 Player.transform.Find("PlayerStand").gameObject.SetActive(true);
@@ -267,6 +271,8 @@ public class GameManager : MonoBehaviour
                 ballManager.SetupBall();
                 playerList.Add(go);
                 go.SendMessage("RandomizeCustomization");
+                go.GetComponent<AI>().playerNum = setNum;
+                setNum++;
             }
 
         }

@@ -299,7 +299,7 @@ public class AI : MonoBehaviour
                         }
                     }
                 }
-                return potentialTargets[UnityEngine.Random.Range(totalCatches > 69? 1 : 0, potentialTargets.Count)];
+                return potentialTargets[UnityEngine.Random.Range(totalCatches > 69? 0 : 1, potentialTargets.Count)];
             }
 
 
