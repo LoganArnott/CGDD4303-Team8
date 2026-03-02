@@ -14,7 +14,7 @@ public class BallManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("script restarted");
+        // Debug.Log("script restarted");
     }
 
     public void SetupBall()
@@ -34,7 +34,7 @@ public class BallManager : MonoBehaviour
             if(GameManager.currentBallHolder != null && GameManager.currentBallHolder.GetComponent<AI>() != null)
             {
                 dropped = true;
-                Debug.Log("ball collided with terrain");
+                // Debug.Log("ball collided with terrain");
                 ballSpawn = GameManager.currentBallHolder.GetNamedChild("BallSpawn").transform;
                 ball.transform.position = ballSpawn.position;
                 //SetBallKinematic(true);
@@ -44,7 +44,7 @@ public class BallManager : MonoBehaviour
             //Player
             else if(GameManager.currentBallHolder != null && GameManager.currentBallHolder.GetComponent<AI>() == null)
             {
-                Debug.Log("ball collided with terrain");
+                // Debug.Log("ball collided with terrain");
                 ballSpawn = GameManager.currentBallHolder.GetNamedChild("BallSpawn").transform;
                 ball.transform.position = ballSpawn.position;
                 SetBallKinematic(true);

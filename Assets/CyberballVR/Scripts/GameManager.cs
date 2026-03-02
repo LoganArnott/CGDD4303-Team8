@@ -33,6 +33,12 @@ public class GameManager : MonoBehaviour
 
     public FadeToBlack fadeScript;
 
+    public bool roundOneFinished = false;
+    public bool roundTwoFinished = false;
+
+    public GameObject roundTwoInstructions;
+    public GameObject roundThreeInstructions;
+
 
     Outline playerOutline;
 
@@ -60,9 +66,12 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (ResearchData.AIPlayers == null) Debug.Log("ReaseaschData.AIPlayers is null");
-        Debug.Log(ResearchData.AIPlayers.Count);
-       
+        if (ResearchData.AIPlayers == null) 
+            Debug.Log("ResearchData.AIPlayers is null");
+        // Debug.Log(ResearchData.AIPlayers.Count);
+
+        roundOneFinished = false;
+        roundTwoFinished = false;
     }
 
     /// <summary>
@@ -70,7 +79,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void StartGame()
     {
-        Debug.Log("Starting Game");
+        // Debug.Log("Starting Game");
         currentBallHolder = Player;
         playerCatchCount = 0;
 
@@ -82,7 +91,7 @@ public class GameManager : MonoBehaviour
         {
             if (levelPrefabs != null)
             {
-                Debug.Log("Level Prefabs is null");
+                // Debug.Log("Level Prefabs is null");
           
                 if (currentLevelSelect != -1) currentLevel = levelPrefabs[currentLevelSelect];
 
@@ -90,7 +99,7 @@ public class GameManager : MonoBehaviour
             }
             else if (currentLevel == null)
             {
-                Debug.Log("current level is not selected in inspector...defaulting at level 1");
+                // Debug.Log("current level is not selected in inspector...defaulting at level 1");
                 currentLevel = levelPrefabs[0];
 
                 SpawnPlayersNoData();
@@ -98,14 +107,14 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("LevelPrefabs is null");
+                // Debug.Log("LevelPrefabs is null");
             }
         }
     }
 
     private void SetupAIPlayers(PlayerData data)
     {
-        Debug.Log("Setting Up AI Players");
+        // Debug.Log("Setting Up AI Players");
         GameObject aiPlayerInstance = Instantiate(AICharacter);
 
         aiPlayerInstance.SetActive(false);
@@ -118,7 +127,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("No customizaiton data found, randomizing appearance");
+            // Debug.Log("No customizaiton data found, randomizing appearance");
             customization.RandomizeCustomization();
         }
 
@@ -128,7 +137,7 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator returnPlayerToHouse() //called from the ThrowBall() in AI.cs
     {
-        Debug.Log("ReturnedPlayerToHouse");
+        // Debug.Log("ReturnedPlayerToHouse");
         fadeScript.fadeToBlack("Lobby Closing...", 3f);
         yield return new WaitForSeconds(3f);
 
@@ -157,7 +166,7 @@ public class GameManager : MonoBehaviour
 
     private void SpawnHumanPlayerInHouse()
     {
-        Debug.Log("SpawnHumanPlayerInHouse");
+        // Debug.Log("SpawnHumanPlayerInHouse");
         Player.transform.position = houseSpawn.position;
         playerMove.SetActive(true);
         playerList.Add(Player);
@@ -166,7 +175,7 @@ public class GameManager : MonoBehaviour
 
     private void SpawnHumanPlayerInField(Vector3 pos, Quaternion rot)
     {
-        Debug.Log("SpawnHumanPlayerInField");
+        // Debug.Log("SpawnHumanPlayerInField");
         Player.transform.position = pos;
         characterController.transform.position = pos;
         Player.GetNamedChild("Jimmy").transform.position = pos;
@@ -204,7 +213,7 @@ public class GameManager : MonoBehaviour
     private void SpawnAllPlayers()
     {
         int playerCount = playerList.Count;
-        Debug.Log("SpawnAllPlayers with player count: " + playerCount);
+        // Debug.Log("SpawnAllPlayers with player count: " + playerCount);
 
         // Loop to instantiate and place all AI players
         for (int i = 0; i < playerCount; i++)
@@ -243,14 +252,14 @@ public class GameManager : MonoBehaviour
     }
     private void SpawnPlayersNoData()
     {
-        Debug.Log("SpawnPlayersNoData");
+        // Debug.Log("SpawnPlayersNoData");
         Instantiate(currentLevel);
 
         foreach (Transform child in currentLevel.transform)
         {
             if (child.tag == "PlayerSpawn")
             {
-                Debug.Log("player spawned with no data");
+                // Debug.Log("player spawned with no data");
                 //characterController.transform.position = child.transform.position + new Vector3(0, 0, 0); //Player podium
                 Player.transform.position = child.transform.position + new Vector3(0, 0, 0);
                 playerList.Add(Player);
@@ -296,9 +305,21 @@ public class GameManager : MonoBehaviour
             {
                 playerCatchCount++;
                 // ChangePlayerOutline();
-                Debug.Log("This Counts");
+                // Debug.Log("This Counts");
                 ResearchData.catchList.Add("the player");
                 ResearchData.throwList.Add("The player threw the ball to ");
+
+                Debug.Log(TrackAllCatches());
+                if(TrackAllCatches() == ResearchData.roundOneLength)
+                {
+                    roundOneFinished = true;
+                    roundTwoInstructions.SetActive(true);
+                }
+                if(TrackAllCatches() == ResearchData.roundTwoLength)
+                {
+                    roundTwoFinished = true;
+                    roundThreeInstructions.SetActive(true);
+                }
             }
         }
         

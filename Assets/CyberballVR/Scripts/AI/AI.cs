@@ -36,7 +36,7 @@ public class AI : MonoBehaviour
         catchCount = 0;
         
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        Debug.Log("RD " + ResearchData.isLevelDataLoaded);
+        // Debug.Log("RD " + ResearchData.isLevelDataLoaded);
     }
 
 
@@ -57,9 +57,21 @@ public class AI : MonoBehaviour
             ResearchData.catchList.Add(name);
             ResearchData.throwList.Add(name + " threw the ball to ");
             catchCount++;
+
+            
+            if(gameManager.TrackAllCatches() == ResearchData.roundOneLength)
+            {
+                gameManager.roundOneFinished = true;
+                gameManager.roundTwoInstructions.SetActive(true);
+            }
+            if(gameManager.TrackAllCatches() == ResearchData.roundTwoLength)
+            {
+                gameManager.roundTwoFinished = true;
+                gameManager.roundThreeInstructions.SetActive(true);
+            }
         }
 
-        Debug.Log("AI is ball parent");
+        // Debug.Log("AI is ball parent");
         ball = b;
         ball.transform.position = ballSpawn.position;
         ball.transform.SetParent(this.gameObject.transform);
@@ -122,7 +134,7 @@ public class AI : MonoBehaviour
         if (ResearchData.AIPlayers != null && ResearchData.AIPlayers.Count != 0)
         {
             if (gameManager.TrackAllCatches() < ResearchData.LevelData.NoOfThrows)
-            {
+            {                
                 if (ball != null)
                 {
                     ball.transform.SetParent(null);
@@ -269,7 +281,7 @@ public class AI : MonoBehaviour
             }
         }
 
-        Debug.Log($"Current speed set to {currentSpeed} for {totalCatches} total catches.");
+        // Debug.Log($"Current speed set to {currentSpeed} for {totalCatches} total catches.");
         return currentSpeed;
     }
 
@@ -294,12 +306,12 @@ public class AI : MonoBehaviour
 
             // Roll a random number to compare against the calculated chance
             float roll = UnityEngine.Random.Range(0f, 100f);
-            Debug.Log($"Rolled {roll} against chance of {accumulatedChance}% for targeting the player at {totalCatches} catches.");
+            // Debug.Log($"Rolled {roll} against chance of {accumulatedChance}% for targeting the player at {totalCatches} catches.");
 
             // Decide based on the chance whether to target the player or a random AI
             if (roll < accumulatedChance && gameManager.Player)
             {
-                Debug.Log("Targeting Player due to chance settings");
+                // Debug.Log("Targeting Player due to chance settings");
                 foreach(Transform child in gameManager.Player.transform)
                 {
                     // Target the player based on XML defined chance

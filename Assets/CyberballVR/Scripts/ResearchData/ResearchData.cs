@@ -15,6 +15,11 @@ public class ResearchData : MonoBehaviour
     public static LevelData LevelData { get; private set; }
 
     public static bool isLevelDataLoaded;
+
+    public static int roundOneLength = 5;
+    public static int roundTwoLength = 20;
+    public static int roundThreeLength = 48;
+
     private void Awake()
     {
         AIPlayers = LoadAllPlayers();
@@ -34,7 +39,7 @@ public class ResearchData : MonoBehaviour
             {
                 players.Add(LoadPlayerData(file, Path.GetFileName(file)));
             }
-            Debug.Log("player: " + Path.GetFileName(file) + ", ");
+            // Debug.Log("player: " + Path.GetFileName(file) + ", ");
         }
         
         return players;
@@ -70,7 +75,7 @@ public class ResearchData : MonoBehaviour
     private LevelData LoadLevelData()
     {
         string filePath = Path.Combine(Application.persistentDataPath, "Level.xml");
-        Debug.Log("Loading Level Data from file: " + filePath);
+        // Debug.Log("Loading Level Data from file: " + filePath);
 
         XDocument xmlDoc;
         try
@@ -87,12 +92,14 @@ public class ResearchData : MonoBehaviour
 
         LevelData levelData = new LevelData();
 
+        #region Change total NoOfThrows
+        #endregion
         // Parse NoOfThrows
         XElement noOfThrowsElement = xmlDoc.Root.Element("NoOfThrows");
         if (noOfThrowsElement != null)
         {
             levelData.NoOfThrows = int.Parse(noOfThrowsElement.Value);
-            Debug.Log("Parsed NoOfThrows: " + levelData.NoOfThrows);
+            // Debug.Log("Parsed NoOfThrows: " + levelData.NoOfThrows);
         }
         else
         {
@@ -114,7 +121,7 @@ public class ResearchData : MonoBehaviour
                 cumulativeThrows += throwCount;
                 levelData.ChancesToPlayer.Add(new ChanceToPlayer { Throws = cumulativeThrows, Chance = chanceValue });
 
-                Debug.Log($"Loaded chance {chanceValue}% for up to {cumulativeThrows} throws.");
+                // Debug.Log($"Loaded chance {chanceValue}% for up to {cumulativeThrows} throws.");
             }
         }
 
@@ -134,15 +141,15 @@ public class ResearchData : MonoBehaviour
                 cumulativeThrows += throwCount;
                 levelData.Speeds.Add(new Speed { Throws = cumulativeThrows, SpeedValue = speedValue });
 
-                Debug.Log($"Loaded speed {speedValue} for up to {cumulativeThrows} throws.");
+                // Debug.Log($"Loaded speed {speedValue} for up to {cumulativeThrows} throws.");
             }
         }
 
         foreach (var speed in levelData.Speeds)
         {
-            Debug.Log($"Speed setting: {speed.Throws} throws at {speed.SpeedValue} speed");
+            // Debug.Log($"Speed setting: {speed.Throws} throws at {speed.SpeedValue} speed");
         }
-        Debug.Log("Speed size " + levelData.Speeds.Count);
+        // Debug.Log("Speed size " + levelData.Speeds.Count);
         return levelData;
     }
 
