@@ -16,7 +16,7 @@ public class ResearchData : MonoBehaviour
 
     public static bool isLevelDataLoaded;
 
-    public static int roundOneLength = 5;
+    public static int roundOneLength = 48;
     public static int roundTwoLength = 20;
     public static int roundThreeLength = 48;
 
