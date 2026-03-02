@@ -33,6 +33,12 @@ public class GameManager : MonoBehaviour
 
     public FadeToBlack fadeScript;
 
+    public bool roundOneFinished = false;
+    public bool roundTwoFinished = false;
+
+    public GameObject roundTwoInstructions;
+    public GameObject roundThreeInstructions;
+
 
     Outline playerOutline;
 
@@ -64,6 +70,9 @@ public class GameManager : MonoBehaviour
 
         if (ResearchData.AIPlayers == null) Debug.Log("ReaseaschData.AIPlayers is null");
         Debug.Log(ResearchData.AIPlayers.Count);
+
+        roundOneFinished = false;
+        roundTwoFinished = false;
        
     }
 
@@ -214,7 +223,6 @@ public class GameManager : MonoBehaviour
         {
             float angle = i * Mathf.PI * 2f / playerCount;
             Vector3 spawnPosition = AllSpawnPosition.position + new Vector3(Mathf.Cos(angle) * spawnRadius, 0, Mathf.Sin(angle) * spawnRadius);
-            int setNum = 0;
             
             //Quaternion spawnRotation = Quaternion.Euler(0, -angle * Mathf.Rad2Deg + 90, 0); // Orient towards center
             Quaternion spawnRotation;
@@ -238,8 +246,6 @@ public class GameManager : MonoBehaviour
                 aiPlayerInstance.transform.position = spawnPosition + new Vector3(0, .75f, 0);
                 aiPlayerInstance.transform.rotation = spawnRotation;
                 aiPlayerInstance.SetActive(true);
-                aiPlayerInstance.GetComponent<AI>().playerNum = setNum;
-                setNum++;
             }
         }
 
@@ -308,6 +314,18 @@ public class GameManager : MonoBehaviour
                 Debug.Log("This Counts");
                 ResearchData.catchList.Add("the player");
                 ResearchData.throwList.Add("The player threw the ball to ");
+
+                Debug.Log(TrackAllCatches());
+                if(TrackAllCatches() == ResearchData.roundOneLength)
+                {
+                    roundOneFinished = true;
+                    roundTwoInstructions.SetActive(true);
+                }
+                if(TrackAllCatches() == ResearchData.roundTwoLength)
+                {
+                    roundTwoFinished = true;
+                    roundThreeInstructions.SetActive(true);
+                }
             }
         }
         

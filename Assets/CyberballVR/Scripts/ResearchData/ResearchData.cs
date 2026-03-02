@@ -15,6 +15,12 @@ public class ResearchData : MonoBehaviour
     public static LevelData LevelData { get; private set; }
 
     public static bool isLevelDataLoaded;
+
+    public static int roundOneLength = 5;
+    public static int roundTwoLength = 20;
+    public static int roundThreeLength = 48;
+
+    
     private void Awake()
     {
         AIPlayers = LoadAllPlayers();
