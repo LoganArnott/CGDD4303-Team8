@@ -22,6 +22,8 @@ public class AI : MonoBehaviour
 
     public int catchCount;
     public int playerNum;
+
+    public int catchChance;
     public enum TargetingPreference
     {
         Random, 
@@ -35,6 +37,7 @@ public class AI : MonoBehaviour
         launchAngle = 25f;
         //targetingPreference = TargetingPreference.Random;
         catchCount = 0;
+        catchChance = 5;
         
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
@@ -45,11 +48,14 @@ public class AI : MonoBehaviour
         if (other.tag.Equals("Ball"))
         {
             ball = other.gameObject;
-            AICatch(ball);
+            if (UnityEngine.Random.Range(0, 100) <= catchChance)
+            {
+                AICatch(ball, false);
+            }
         }
     }
 
-    public void AICatch(GameObject b)
+    public void AICatch(GameObject b, bool isRetry)
     {
         if (GameManager.currentBallHolder != gameObject)
         {
@@ -70,19 +76,21 @@ public class AI : MonoBehaviour
             }
         }
 
-        Debug.Log("AI is ball parent");
-        ball = b;
-        ball.transform.position = ballSpawn.position;
-        ball.transform.SetParent(this.gameObject.transform);
-        GameManager.currentBallHolder = this.gameObject;
+        if (!isRetry)
+        {
+            Debug.Log("AI is ball parent");
+            ball = b;
+            ball.transform.position = ballSpawn.position;
+            ball.transform.SetParent(this.gameObject.transform);
+            GameManager.currentBallHolder = this.gameObject;
 
-        EventManager.onAISuccessfulCatch?.Invoke();
+            EventManager.onAISuccessfulCatch?.Invoke();
 
-        Rigidbody rb = ball.GetComponent<Rigidbody>();
-        rb.isKinematic = true;
-        
-        StartCoroutine(ThrowBall());
+            Rigidbody rb = ball.GetComponent<Rigidbody>();
+            rb.isKinematic = true;
 
+            StartCoroutine(ThrowBall());
+        }
        
     }
     

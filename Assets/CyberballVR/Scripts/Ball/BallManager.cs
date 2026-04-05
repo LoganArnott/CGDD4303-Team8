@@ -44,7 +44,7 @@ public class BallManager : MonoBehaviour
                 ballSpawn = GameManager.currentBallHolder.GetNamedChild("BallSpawn").transform;
                 ball.transform.position = ballSpawn.position;
                 //SetBallKinematic(true);
-                GameManager.currentBallHolder.GetComponent<AI>().AICatch(ball.gameObject);
+                GameManager.currentBallHolder.GetComponent<AI>().AICatch(ball.gameObject, true);
                 ball.GetComponent<BallEffects>().ResetGrabCount();
             }
             //Player
