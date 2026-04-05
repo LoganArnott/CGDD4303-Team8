@@ -11,6 +11,7 @@ public class BallManager : MonoBehaviour
     public XRGrabInteractable ball;
     public static bool dropped;
     public AudioSource ballDrop;
+    public GameObject Player;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,8 +22,13 @@ public class BallManager : MonoBehaviour
     {
         this.gameObject.SetActive(true);
         dropped = true;
+        ballSpawn = GameManager.currentBallHolder.GetNamedChild("BallSpawn").transform;
         ball.transform.position = ballSpawn.position;
         SetBallKinematic(true);
+        if(GameManager.currentBallHolder != Player)
+        {
+            GameManager.currentBallHolder.GetComponent<AI>().StartRoundAICatch(ball.gameObject);
+        }
     }
 
     //Respawns ball in front of player if dropped on ground
@@ -55,8 +61,6 @@ public class BallManager : MonoBehaviour
         }
     }
 
-
-
     public void DisableKinematicOnGrab()
     {
         SetBallKinematic(false);
@@ -68,5 +72,10 @@ public class BallManager : MonoBehaviour
         {
             ball.GetComponent<Rigidbody>().isKinematic = isKinematic;
         }
+    }
+
+    public void DisableBall()
+    {
+        this.gameObject.SetActive(false);
     }
 }

@@ -72,15 +72,15 @@ public class AICustomize : MonoBehaviour
     {
         playerData = data;
 
-        SetActiveOption(ClothingOptions.transform, data.Clothing);
+        // SetActiveOption(ClothingOptions.transform, data.Clothing);
 
-        bool hasHeadAccessory = SetActiveOption(HeadAccessory1Option.transform, data.Accessory_1);
-        // If there is a head accessory, does not activate hair. Otherwise, activates hair.
-        if (!hasHeadAccessory)
-        {
-            SetActiveOption(HairOptions.transform, data.Hair);
-        }
-        SetActiveOption(HeadAccessory2Option.transform, data.Accessory_2);
+        // bool hasHeadAccessory = SetActiveOption(HeadAccessory1Option.transform, data.Accessory_1);
+        // // If there is a head accessory, does not activate hair. Otherwise, activates hair.
+        // if (!hasHeadAccessory)
+        // {
+        //     SetActiveOption(HairOptions.transform, data.Hair);
+        // }
+        // SetActiveOption(HeadAccessory2Option.transform, data.Accessory_2);
 
         Material skinMaterial = GetSkinMaterialByName(data.SkinColor);
         if (skinMaterial != null && Body && Head)

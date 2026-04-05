@@ -7,6 +7,7 @@ using TMPro;
 public class UsernameText : MonoBehaviour
 {
     string username = "________";
+    public GameObject saved;
     // public GameObject customizationManager;
 
     // Start is called before the first frame update
@@ -64,5 +65,6 @@ public class UsernameText : MonoBehaviour
     void SaveUsername()
     {
         UsernameVariable.playerUsername = username;
+        saved.SetActive(true);
     }
 }

@@ -37,7 +37,6 @@ public class AI : MonoBehaviour
         catchCount = 0;
         
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        Debug.Log("RD " + ResearchData.isLevelDataLoaded);
     }
 
 
@@ -58,6 +57,17 @@ public class AI : MonoBehaviour
             ResearchData.catchList.Add(name);
             ResearchData.throwList.Add(name + " threw the ball to ");
             catchCount++;
+            
+            if(gameManager.TrackAllCatches() == ResearchData.LevelData.RoundOneLength)
+            {
+                gameManager.roundOneFinished = true;
+                gameManager.roundTwoInstructions.SetActive(true);
+            }
+            if(gameManager.TrackAllCatches() == (ResearchData.LevelData.RoundOneLength + ResearchData.LevelData.RoundTwoLength))
+            {
+                gameManager.roundTwoFinished = true;
+                gameManager.roundThreeInstructions.SetActive(true);
+            }
         }
 
         Debug.Log("AI is ball parent");
@@ -74,6 +84,20 @@ public class AI : MonoBehaviour
         StartCoroutine(ThrowBall());
 
        
+    }
+    
+    public void StartRoundAICatch(GameObject b)
+    {
+        Debug.Log("AI is ball parent");
+        ball = b;
+        ball.transform.SetParent(this.gameObject.transform);
+
+        // EventManager.onAISuccessfulCatch?.Invoke();
+
+        Rigidbody rb = ball.GetComponent<Rigidbody>();
+        rb.isKinematic = true;
+        
+        StartCoroutine(ThrowBall());
     }
 
     private void FixedUpdate()
@@ -282,7 +306,7 @@ public class AI : MonoBehaviour
             List<GameObject> potentialTargets = new List<GameObject>(gameManager.playerList);
             potentialTargets.Remove(this.gameObject); // Exclude this AI from potential targets.
 
-            if (totalCatches < 49)
+            if (totalCatches < ResearchData.LevelData.RoundOneLength)
             {
                 return potentialTargets[UnityEngine.Random.Range(0, potentialTargets.Count)];
             }
@@ -299,7 +323,7 @@ public class AI : MonoBehaviour
                         }
                     }
                 }
-                return potentialTargets[UnityEngine.Random.Range(totalCatches > 69? 0 : 1, potentialTargets.Count)];
+                return potentialTargets[UnityEngine.Random.Range(totalCatches >= (ResearchData.LevelData.RoundOneLength + ResearchData.LevelData.RoundTwoLength)? 0 : 1, potentialTargets.Count)];
             }
 
 

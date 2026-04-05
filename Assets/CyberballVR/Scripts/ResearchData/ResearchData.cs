@@ -14,11 +14,7 @@ public class ResearchData : MonoBehaviour
     [SerializeField]
     public static LevelData LevelData { get; private set; }
 
-    public static bool isLevelDataLoaded;
-
-    public static int roundOneLength = 48;
-    public static int roundTwoLength = 20;
-    public static int roundThreeLength = 48;
+    public static List<string> namePool = new List<string> {"Jordan", "Morgan", "Taylor", "Sam", "Carter", "Alex", "Harper", "Riley", "Avery", "Parker"};
 
     
     private void Awake()
@@ -32,45 +28,58 @@ public class ResearchData : MonoBehaviour
     public List<PlayerData> LoadAllPlayers()
     {
         List<PlayerData> players = new List<PlayerData>();
-        string directoryPath = Application.persistentDataPath;
+        // string directoryPath = Application.persistentDataPath;
 
-        foreach (string file in Directory.GetFiles(directoryPath, "*.xml"))
-        {
-            if (Path.GetFileName(file) != "Level.xml")
-            {
-                players.Add(LoadPlayerData(file, Path.GetFileName(file)));
-            }
-            Debug.Log("player: " + Path.GetFileName(file) + ", ");
-        }
+        // foreach (string file in Directory.GetFiles(directoryPath, "*.xml"))
+        // {
+        //     if (Path.GetFileName(file) != "Level.xml")
+        //     {
+        //         players.Add(LoadPlayerData(file, Path.GetFileName(file)));
+        //     }
+        //     Debug.Log("player: " + Path.GetFileName(file) + ", ");
+        // }
+
+        players.Add(LoadPlayerData());
+        players.Add(LoadPlayerData());
+        players.Add(LoadPlayerData());
         
         return players;
     }
 
-    private PlayerData LoadPlayerData(string filePath, string fileName)
+    private PlayerData LoadPlayerData()
     {
-        try
-        {
-            XDocument xmlDoc = XDocument.Load(filePath);
-            PlayerData player = new PlayerData
-            {
-                Name = fileName.Split(".")[0],
-                ThrowCount = 0,
-                SkinColor = xmlDoc.Root.Element("SkinColor").Value,
-                Hair = xmlDoc.Root.Element("Hair")?.Value,
-                Clothing = xmlDoc.Root.Element("Clothing")?.Value,
-                Accessory_1 = xmlDoc.Root.Element("Accessories1")?.Value,
-                Accessory_2 = xmlDoc.Root.Element("Accessories2")?.Value,
-                //Clothing_Accessory_1 = xmlDoc.Root.Element("ClothingAccessory1")?.Value,
-                //Clothing_Accessory_2 = xmlDoc.Root.Element("HeadAccessory2")?.Value,
-            };
+        // try
+        // {
+        //     XDocument xmlDoc = XDocument.Load(filePath);
+        //     PlayerData player = new PlayerData
+        //     {
+        //         Name = fileName.Split(".")[0],
+        //         ThrowCount = 0,
+        //         SkinColor = "Gray",
+        //         // Hair = xmlDoc.Root.Element("Hair")?.Value,
+        //         // Clothing = xmlDoc.Root.Element("Clothing")?.Value,
+        //         // Accessory_1 = xmlDoc.Root.Element("Accessories1")?.Value,
+        //         // Accessory_2 = xmlDoc.Root.Element("Accessories2")?.Value,
+        //         //Clothing_Accessory_1 = xmlDoc.Root.Element("ClothingAccessory1")?.Value,
+        //         //Clothing_Accessory_2 = xmlDoc.Root.Element("HeadAccessory2")?.Value,
+        //     };
 
-            return player;
-        }
-        catch (System.Exception e)
+        //     return player;
+        // }
+        // catch (System.Exception e)
+        // {
+        //     Debug.LogError("Error loading player data from file " + filePath + ": " + e.Message);
+        //     return null;
+        // }
+
+        PlayerData player = new PlayerData
         {
-            Debug.LogError("Error loading player data from file " + filePath + ": " + e.Message);
-            return null;
-        }
+            Name = GenerateName(),
+            ThrowCount = 0,
+            SkinColor = "Gray",
+        };
+
+        return player;
     }
 
     private LevelData LoadLevelData()
@@ -78,77 +87,114 @@ public class ResearchData : MonoBehaviour
         string filePath = Path.Combine(Application.persistentDataPath, "Level.xml");
         Debug.Log("Loading Level Data from file: " + filePath);
 
+        LevelData levelData = new LevelData();
         XDocument xmlDoc;
         try
         {
             xmlDoc = XDocument.Load(filePath);
-            isLevelDataLoaded = true;
+
+            // Parse RoundOneLength
+            XElement roundOneLengthElement = xmlDoc.Root.Element("RoundOneLength");
+            if (roundOneLengthElement != null)
+            {
+                levelData.RoundOneLength = int.Parse(roundOneLengthElement.Value);
+                Debug.Log("Parsed RoundOneLength: " + levelData.RoundOneLength);
+            }
+            else
+            {
+                Debug.LogWarning("RoundOneLength element is missing in the XML.");
+            }
+
+            // Parse RoundTwoLength
+            XElement roundTwoLengthElement = xmlDoc.Root.Element("RoundTwoLength");
+            if (roundTwoLengthElement != null)
+            {
+                levelData.RoundTwoLength = int.Parse(roundTwoLengthElement.Value);
+                Debug.Log("Parsed RoundTwoLength: " + levelData.RoundTwoLength);
+            }
+            else
+            {
+                Debug.LogWarning("RoundTwoLength element is missing in the XML.");
+            }
+
+            // Parse RoundThreeLength
+            XElement roundThreeLengthElement = xmlDoc.Root.Element("RoundThreeLength");
+            if (roundThreeLengthElement != null)
+            {
+                levelData.RoundThreeLength = int.Parse(roundThreeLengthElement.Value);
+                Debug.Log("Parsed RoundThreeLength: " + levelData.RoundThreeLength);
+            }
+            else
+            {
+                Debug.LogWarning("RoundThreeLength element is missing in the XML.");
+            }
+
+            // Parse NoOfThrows
+            XElement noOfThrowsElement = xmlDoc.Root.Element("NoOfThrows");
+            if (noOfThrowsElement != null)
+            {
+                levelData.NoOfThrows = int.Parse(noOfThrowsElement.Value);
+                Debug.Log("Parsed NoOfThrows: " + levelData.NoOfThrows);
+            }
+            else
+            {
+                Debug.LogWarning("NoOfThrows element is missing in the XML.");
+            }
         }
         catch (Exception e)
         {
-            Debug.LogError("Failed to load XML Document: " + e.Message);
-            isLevelDataLoaded = false;
-            return null;
+            Debug.Log("Failed to load XML Document: " + e.Message);
+
+            levelData.RoundOneLength = 48;
+            levelData.RoundTwoLength = 20;
+            levelData.RoundThreeLength = 48;
+            levelData.NoOfThrows = levelData.RoundOneLength + levelData.RoundTwoLength + levelData.RoundThreeLength;
         }
 
-        LevelData levelData = new LevelData();
+        // // Parse ChancesToPlayer
+        // int cumulativeThrows = 0;
+        // levelData.ChancesToPlayer.Clear();
+        // XElement root = xmlDoc.Root.Element("ChancesToPlayer");
+        // foreach (var element in root.Value.Split(';'))
+        // {
+        //     if (!string.IsNullOrWhiteSpace(element))
+        //     {
+        //         var parts = element.Split(',');
+        //         int throwCount = int.Parse(parts[0]); // Throws 
+        //         float chanceValue = float.Parse(parts[1]); // Chance 
 
-        // Parse NoOfThrows
-        XElement noOfThrowsElement = xmlDoc.Root.Element("NoOfThrows");
-        if (noOfThrowsElement != null)
-        {
-            levelData.NoOfThrows = int.Parse(noOfThrowsElement.Value);
-            Debug.Log("Parsed NoOfThrows: " + levelData.NoOfThrows);
-        }
-        else
-        {
-            Debug.LogWarning("NoOfThrows element is missing in the XML.");
-        }
+        //         cumulativeThrows += throwCount;
+        //         levelData.ChancesToPlayer.Add(new ChanceToPlayer { Throws = cumulativeThrows, Chance = chanceValue });
 
-        // Parse ChancesToPlayer
-        int cumulativeThrows = 0;
-        levelData.ChancesToPlayer.Clear();
-        XElement root = xmlDoc.Root.Element("ChancesToPlayer");
-        foreach (var element in root.Value.Split(';'))
-        {
-            if (!string.IsNullOrWhiteSpace(element))
-            {
-                var parts = element.Split(',');
-                int throwCount = int.Parse(parts[0]); // Throws 
-                float chanceValue = float.Parse(parts[1]); // Chance 
+        //         Debug.Log($"Loaded chance {chanceValue}% for up to {cumulativeThrows} throws.");
+        //     }
+        // }
 
-                cumulativeThrows += throwCount;
-                levelData.ChancesToPlayer.Add(new ChanceToPlayer { Throws = cumulativeThrows, Chance = chanceValue });
+        // // Parse Speeds
+        // cumulativeThrows = 0;
+        // levelData.Speeds.Clear();
+        // root = xmlDoc.Root.Element("Speeds");
 
-                Debug.Log($"Loaded chance {chanceValue}% for up to {cumulativeThrows} throws.");
-            }
-        }
+        // foreach (var element in root.Value.Split(';'))
+        // {
+        //     if (!string.IsNullOrWhiteSpace(element))
+        //     {
+        //         var parts = element.Split(',');
+        //         int throwCount = int.Parse(parts[0]); // Throws
+        //         float speedValue = float.Parse(parts[1]); // Speed
 
-        // Parse Speeds
-        cumulativeThrows = 0;
-        levelData.Speeds.Clear();
-        root = xmlDoc.Root.Element("Speeds");
+        //         cumulativeThrows += throwCount;
+        //         levelData.Speeds.Add(new Speed { Throws = cumulativeThrows, SpeedValue = speedValue });
 
-        foreach (var element in root.Value.Split(';'))
-        {
-            if (!string.IsNullOrWhiteSpace(element))
-            {
-                var parts = element.Split(',');
-                int throwCount = int.Parse(parts[0]); // Throws
-                float speedValue = float.Parse(parts[1]); // Speed
+        //         Debug.Log($"Loaded speed {speedValue} for up to {cumulativeThrows} throws.");
+        //     }
+        // }
 
-                cumulativeThrows += throwCount;
-                levelData.Speeds.Add(new Speed { Throws = cumulativeThrows, SpeedValue = speedValue });
-
-                Debug.Log($"Loaded speed {speedValue} for up to {cumulativeThrows} throws.");
-            }
-        }
-
-        foreach (var speed in levelData.Speeds)
-        {
-            Debug.Log($"Speed setting: {speed.Throws} throws at {speed.SpeedValue} speed");
-        }
-        Debug.Log("Speed size " + levelData.Speeds.Count);
+        // foreach (var speed in levelData.Speeds)
+        // {
+        //     Debug.Log($"Speed setting: {speed.Throws} throws at {speed.SpeedValue} speed");
+        // }
+        // Debug.Log("Speed size " + levelData.Speeds.Count);
         return levelData;
     }
 
@@ -161,7 +207,7 @@ public class ResearchData : MonoBehaviour
         {
             switch(i) {
                 case 0:
-                    sw.WriteLine("=== Round 1 (Tosses 1-48) ===");
+                    sw.WriteLine("=== Round 1 (Tosses 1-" + LevelData.RoundOneLength + ") ===");
                     break;
                 case 48:
                     sw.WriteLine("\n");
@@ -209,6 +255,14 @@ public class ResearchData : MonoBehaviour
 
         sw.Close();
     }
+
+    private String GenerateName()
+    {
+        int randomNumber = UnityEngine.Random.Range(0, namePool.Count);
+        string randomName = namePool[randomNumber];
+        namePool.Remove(randomName);
+        return randomName;
+    }
 }
 
 public class PlayerData
@@ -227,6 +281,9 @@ public class PlayerData
 
 public class LevelData
 {
+    public int RoundOneLength { get; set; }
+    public int RoundTwoLength { get; set; }
+    public int RoundThreeLength { get; set; }
     public int NoOfThrows { get; set; }
     public List<ChanceToPlayer> ChancesToPlayer { get; set; }
     public List<Speed> Speeds { get; set; }

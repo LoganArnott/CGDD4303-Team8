@@ -187,9 +187,9 @@ public class GameManager : MonoBehaviour
         characterController.transform.rotation = rot;
   
         playerMove.SetActive(false);
-        AlternateHandRays(false);
+        // AlternateHandRays(false);
         Player.transform.Find("PlayerStand").gameObject.SetActive(true);   //.GetNamedChild("PlayerStand").SetActive(true);
-        StartCoroutine(SetupBallGM());
+        // StartCoroutine(SetupBallGM());
     }
    
     public void AlternateHandRays(bool flag)
@@ -207,9 +207,22 @@ public class GameManager : MonoBehaviour
             hr.gameObject.SetActive(false);
         }
     }
+
+    public void SetUpBallReciever()
+    {
+        if(roundTwoFinished)
+        {
+            currentBallHolder = playerList[UnityEngine.Random.Range(0, playerList.Count)];
+        } else if(roundOneFinished)
+        {
+            currentBallHolder = playerList[UnityEngine.Random.Range(1, playerList.Count)];
+        }
+        StartCoroutine(SetupBallGM());
+    }
+
     IEnumerator SetupBallGM()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.5f);
         ballManager.SetupBall();
     }
 
@@ -316,15 +329,10 @@ public class GameManager : MonoBehaviour
                 ResearchData.throwList.Add("The player threw the ball to ");
 
                 Debug.Log(TrackAllCatches());
-                if(TrackAllCatches() == ResearchData.roundOneLength)
+                if(TrackAllCatches() == ResearchData.LevelData.RoundOneLength)
                 {
                     roundOneFinished = true;
                     roundTwoInstructions.SetActive(true);
-                }
-                if(TrackAllCatches() == ResearchData.roundTwoLength)
-                {
-                    roundTwoFinished = true;
-                    roundThreeInstructions.SetActive(true);
                 }
             }
         }

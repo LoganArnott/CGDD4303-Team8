@@ -34,7 +34,7 @@ public class LoadInstructions : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError("Failed to load XML Document: " + e.Message);
+            Debug.Log("Failed to load XML Document: " + e.Message);
         }
     }
 }
