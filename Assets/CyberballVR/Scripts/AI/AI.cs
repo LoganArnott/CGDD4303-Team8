@@ -37,7 +37,7 @@ public class AI : MonoBehaviour
         launchAngle = 25f;
         //targetingPreference = TargetingPreference.Random;
         catchCount = 0;
-        catchChance = 5;
+        catchChance = 10;
         
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
