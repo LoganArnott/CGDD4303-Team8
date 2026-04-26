@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6b3d828f9d9443f49a8d1aa1575a43cf
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 143745
+  packageName: Modern School Gym
+  packageVersion: 1.0
+  assetPath: Assets/Modern School Gym/Materials/mat_line_yellow.mat
+  uploadId: 304489

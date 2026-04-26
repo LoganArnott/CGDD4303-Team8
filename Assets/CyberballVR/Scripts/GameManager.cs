@@ -39,6 +39,9 @@ public class GameManager : MonoBehaviour
     public GameObject roundTwoInstructions;
     public GameObject roundThreeInstructions;
 
+    public GameObject park;
+    public GameObject gym;
+
 
     Outline playerOutline;
 
@@ -55,6 +58,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        park.SetActive(true); 
+        gym.SetActive(false);
         characterController = Player.GetComponentInChildren<CharacterController>();
         SpawnHumanPlayerInHouse();
         
@@ -84,6 +89,19 @@ public class GameManager : MonoBehaviour
         Debug.Log("Starting Game");
         currentBallHolder = Player;
         playerCatchCount = 0;
+
+        int level = Random.Range(0, 2);
+        Debug.Log(level);
+        if (level == 0)
+        {
+            park.SetActive(true);
+            gym.SetActive(false);
+        }
+        else
+        {
+            park.SetActive(false);
+            gym.SetActive(true);
+        }
 
         if (ResearchData.AIPlayers != null && ResearchData.AIPlayers.Count != 0)
         {

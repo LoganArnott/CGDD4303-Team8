@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 9fd03e0caff099f4da5b8a9f563ed165
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 143745
+  packageName: Modern School Gym
+  packageVersion: 1.0
+  assetPath: Assets/Modern School Gym/Materials/mat_stairs.mat
+  uploadId: 304489

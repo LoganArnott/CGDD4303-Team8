@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e88616d28dd40dd41bd60b0f4d8a060e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 143745
+  packageName: Modern School Gym
+  packageVersion: 1.0
+  assetPath: Assets/Modern School Gym/Materials/mat_light.mat
+  uploadId: 304489
