@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using Unity.XR.CoreUtils;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.HID;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.SceneManagement;
@@ -99,9 +100,23 @@ public class GameManager : MonoBehaviour
         currentBallHolder = Player;
         playerCatchCount = 0;
         
-        int level = 1;
-        //int level = Random.Range(0, 2);
-        Debug.Log(level);
+        int level;
+        Debug.Log(UsernameVariable.playerUsername);
+        if (UsernameVariable.playerUsername.Equals("PENDING_"))
+        {
+            level = 0;
+            Debug.Log("It Works!");
+        }
+        if (UsernameVariable.playerUsername.Equals("KITSU___"))
+        {
+            level = 1;
+            Debug.Log("Works It!");
+        }
+        else
+        {
+            level = Random.Range(0, 2);
+            Debug.Log(level);
+        }
         if (level == 0)
         {
             park.SetActive(true);
