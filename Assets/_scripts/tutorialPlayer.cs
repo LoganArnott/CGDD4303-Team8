@@ -7,6 +7,7 @@ public class tutorialPlayer : MonoBehaviour
     public Transform playerParent;
     public Transform jimmy;
     public CharacterController characterController;
+    public Transform playerCamera;
 
     public void Start()
     {
@@ -17,6 +18,8 @@ public class tutorialPlayer : MonoBehaviour
         playerParent.rotation = transform.rotation;
         jimmy.rotation = transform.rotation;
         characterController.transform.rotation = transform.rotation;
+        characterController.transform.rotation = Quaternion.Euler(0f, 90f, 0f);
+        playerCamera.rotation = transform.rotation;
 
     }
 }

@@ -205,29 +205,54 @@ public class ResearchData : MonoBehaviour
         StreamWriter sw = File.CreateText(Application.persistentDataPath + "\\Log - " + timestamp + ".txt");
         for(int i = 0; i < catchList.Count; i++)
         {
-            switch(i) {
-                case 0:
-                    sw.WriteLine("=== Round 1 (Tosses 1-" + LevelData.RoundOneLength + ") ===");
-                    break;
-                case 48:
-                    sw.WriteLine("\n");
-                    foreach(PlayerData aiPlayer in AIPlayers)
-                    {
-                        sw.WriteLine("Player tossed to " + aiPlayer.Name + " " + aiPlayer.ThrowCount + " times");
-                        aiPlayer.ThrowCount = 0;
-                    }
-                    sw.WriteLine("\n=== Round 2 (Tosses 49-68) ===");
-                    break;
-                case 68:
-                    sw.WriteLine("\n");
-                    foreach(PlayerData aiPlayer in AIPlayers)
-                    {
-                        sw.WriteLine("Player tossed to " + aiPlayer.Name + " " + aiPlayer.ThrowCount + " times");
-                        aiPlayer.ThrowCount = 0;
-                    }
-                    sw.WriteLine("\n=== Round 3 (Tosses 69-116) ===");
-                    break;
+            if(i == 0)
+            {
+                sw.WriteLine("=== Round 1 (Tosses 1-" + LevelData.RoundOneLength + ") ===");
             }
+            if(i == LevelData.RoundOneLength)
+            {
+                sw.WriteLine("");
+                foreach(PlayerData aiPlayer in AIPlayers)
+                {
+                    sw.WriteLine("Player tossed to " + aiPlayer.Name + " " + aiPlayer.ThrowCount + " times");
+                    aiPlayer.ThrowCount = 0;
+                }
+                sw.WriteLine("\n\n=== Round 2 (Tosses " + (LevelData.RoundOneLength + 1) + "-" + (LevelData.RoundOneLength + LevelData.RoundTwoLength) + ") ===");
+            }
+            if(i == (LevelData.RoundOneLength + LevelData.RoundTwoLength))
+            {
+                sw.WriteLine("");
+                foreach(PlayerData aiPlayer in AIPlayers)
+                {
+                    sw.WriteLine("Player tossed to " + aiPlayer.Name + " " + aiPlayer.ThrowCount + " times");
+                    aiPlayer.ThrowCount = 0;
+                }
+                sw.WriteLine("\n\n=== Round 3 (Tosses " + (LevelData.RoundOneLength + LevelData.RoundTwoLength + 1) + "-" + (LevelData.NoOfThrows) + ") ===");
+            }
+
+            // switch(i) {
+            //     case 0:
+            //         sw.WriteLine("=== Round 1 (Tosses 1-" + LevelData.RoundOneLength + ") ===");
+            //         break;
+            //     case 48:
+            //         sw.WriteLine("\n");
+            //         foreach(PlayerData aiPlayer in AIPlayers)
+            //         {
+            //             sw.WriteLine("Player tossed to " + aiPlayer.Name + " " + aiPlayer.ThrowCount + " times");
+            //             aiPlayer.ThrowCount = 0;
+            //         }
+            //         sw.WriteLine("\n=== Round 2 (Tosses " + (LevelData.RoundOneLength + 1) + "-" + (LevelData.RoundOneLength + LevelData.RoundTwoLength) + ") ===");
+            //         break;
+            //     case 68:
+            //         sw.WriteLine("\n");
+            //         foreach(PlayerData aiPlayer in AIPlayers)
+            //         {
+            //             sw.WriteLine("Player tossed to " + aiPlayer.Name + " " + aiPlayer.ThrowCount + " times");
+            //             aiPlayer.ThrowCount = 0;
+            //         }
+            //         sw.WriteLine("\n=== Round 3 (Tosses " + (LevelData.RoundOneLength + LevelData.RoundTwoLength + 1) + "-" + (LevelData.NoOfThrows) + ") ===");
+            //         break;
+            // }
 
             if(throwList[i] == "The player threw the ball to ")
             {
@@ -242,9 +267,9 @@ public class ResearchData : MonoBehaviour
 
             sw.WriteLine((i + 1) + ": " + throwList[i] + catchList[i]);
 
-            if(i == 115)
+            if(i == (LevelData.NoOfThrows - 1))
             {
-                sw.WriteLine("\n");
+                sw.WriteLine("");
                 foreach(PlayerData aiPlayer in AIPlayers)
                 {
                     sw.WriteLine("Player tossed to " + aiPlayer.Name + " " + aiPlayer.ThrowCount + " times");

@@ -23,6 +23,8 @@ public class PitchingMachine : MonoBehaviour
 
     public Transform startingTransform;
 
+    static List<Coroutine> coroutineList = new List<Coroutine>();
+
     [Serializable]
     private class PitchingInstructions
     {
@@ -44,13 +46,18 @@ public class PitchingMachine : MonoBehaviour
     {
         EventManager.onTogglePitch += togglePitch;
         rotating = false;
-
+        isPitching = false;
+        currentPitch = 0;
+        rotating = false;
+        emptyRotator.position = transform.position;
+        emptyRotator.rotation = transform.rotation;
+        passedTime = 0f;
     }
 
     private void OnDisable()
     {
         EventManager.onTogglePitch -= togglePitch;
-        //StopCoroutine(SetAim());
+        // StopCoroutine(SetAim());
     }
 
     private void Start()
@@ -71,7 +78,13 @@ public class PitchingMachine : MonoBehaviour
         //rotating = false;
         transform.position = startingTransform.position;
         transform.rotation = startingTransform.rotation;
-        if (isPitching) StartCoroutine(SetAim());
+        while(coroutineList.Count > 0)
+        {
+            StopCoroutine(coroutineList[coroutineList.Count - 1]);
+            coroutineList.Remove(coroutineList[coroutineList.Count - 1]);
+        }
+        Debug.Log(coroutineList.Count);
+        if (isPitching) coroutineList.Add(StartCoroutine(SetAim()));
         //transform.position = emptyRotator.position;
     }
 
@@ -82,7 +95,9 @@ public class PitchingMachine : MonoBehaviour
 
     IEnumerator SetAim()
     {
-        float rotation = pitches[currentPitch].rotation;
+        Debug.Log("Cororoutine started");
+        // float rotation = pitches[currentPitch].rotation;
+        float rotation = 20f;
         emptyRotator.Rotate(rotation, 0f, 0f);
         rotateTo = emptyRotator.rotation;
         rotating = true;
@@ -96,7 +111,9 @@ public class PitchingMachine : MonoBehaviour
         rotating = true;
         yield return new WaitForSeconds(timeToTurn); //wait till at angle
         rotating = false;
-        currentPitch = (currentPitch + 1) % pitches.Length;
+        emptyRotator.position = startingTransform.position;
+        emptyRotator.rotation = startingTransform.rotation;
+        // currentPitch = (currentPitch + 1) % pitches.Length;
         yield return new WaitForSeconds(2);
         if (isPitching) StartCoroutine(SetAim());
     }
@@ -108,10 +125,11 @@ public class PitchingMachine : MonoBehaviour
         ball.up = transform.forward;
         ball.GetComponent<Rigidbody>().velocity = Vector3.zero;
         ball.gameObject.SetActive(true);
-        ball.GetComponent<Rigidbody>().AddForce(transform.up * pitches[currentPitch].force, ForceMode.Impulse);
+        // ball.GetComponent<Rigidbody>().AddForce(transform.up * (pitches[currentPitch].force - 0.1f), ForceMode.Impulse);
+        ball.GetComponent<Rigidbody>().AddForce(transform.up * 2f, ForceMode.Impulse);
 
 
-        Debug.Log("Pitching at angle: " + pitches[currentPitch].rotation + " with force: " + pitches[currentPitch].force);
+        Debug.Log("Pitching at angle: " + pitches[currentPitch].rotation + " with force: " + (pitches[currentPitch].force - 0.1f));
     }
 
     private void Update()
