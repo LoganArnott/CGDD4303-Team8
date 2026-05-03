@@ -11,7 +11,7 @@ public class UsernameText : MonoBehaviour
     // public GameObject customizationManager;
 
     // Start is called before the first frame update
-    void Awake()
+    void OnEnable()
     {
         username = UsernameVariable.playerUsername;
         GetComponent<TMP_Text>().text = username;

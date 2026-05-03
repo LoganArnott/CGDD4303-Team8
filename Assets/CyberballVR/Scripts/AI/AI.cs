@@ -23,6 +23,8 @@ public class AI : MonoBehaviour
     public int catchCount;
     public int playerNum;
 
+    public Animator aiAnimator;
+
     public int catchChance;
     public enum TargetingPreference
     {
@@ -40,6 +42,7 @@ public class AI : MonoBehaviour
         catchChance = 10;
         
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        // aiAnimator = this.gameObject.GetComponentInChildren<Animator>();
     }
 
 
@@ -48,15 +51,18 @@ public class AI : MonoBehaviour
         if (other.tag.Equals("Ball"))
         {
             ball = other.gameObject;
-            if (UnityEngine.Random.Range(0, 100) <= catchChance)
+            if (UnityEngine.Random.Range(0, 100) >= catchChance)
             {
-                AICatch(ball, false);
+                AICatch(ball);
             }
         }
     }
 
-    public void AICatch(GameObject b, bool isRetry)
+    public void AICatch(GameObject b)
     {
+        aiAnimator.SetBool("Idle Bool", false);
+        aiAnimator.SetTrigger("Idle Activator");
+
         if (GameManager.currentBallHolder != gameObject)
         {
             string name = transform.GetComponent<AICustomize>().UIName.text;
@@ -68,16 +74,18 @@ public class AI : MonoBehaviour
             {
                 gameManager.roundOneFinished = true;
                 gameManager.roundTwoInstructions.SetActive(true);
+                gameManager.round1Music.SetActive(false);
+                gameManager.round2Music.SetActive(true);
             }
             if(gameManager.TrackAllCatches() == (ResearchData.LevelData.RoundOneLength + ResearchData.LevelData.RoundTwoLength))
             {
                 gameManager.roundTwoFinished = true;
                 gameManager.roundThreeInstructions.SetActive(true);
+                gameManager.round2Music.SetActive(false);
+                gameManager.round3Music.SetActive(true);
             }
         }
 
-        if (!isRetry)
-        {
             Debug.Log("AI is ball parent");
             ball = b;
             ball.transform.position = ballSpawn.position;
@@ -90,7 +98,6 @@ public class AI : MonoBehaviour
             rb.isKinematic = true;
 
             StartCoroutine(ThrowBall());
-        }
        
     }
     
@@ -99,6 +106,11 @@ public class AI : MonoBehaviour
         Debug.Log("AI is ball parent");
         ball = b;
         ball.transform.SetParent(this.gameObject.transform);
+
+        string name = transform.GetComponent<AICustomize>().UIName.text;
+        ResearchData.throwList.Add(name + " threw the ball to ");
+        Debug.Log(ResearchData.throwList.Count());
+        Debug.Log(ResearchData.catchList.Count());
 
         // EventManager.onAISuccessfulCatch?.Invoke();
 
@@ -221,6 +233,9 @@ public class AI : MonoBehaviour
 
                     ball = null;
                 }
+                
+                aiAnimator.SetBool("Idle Bool", true);
+                aiAnimator.ResetTrigger("Idle Activator");
             }
             else
             {

@@ -21,11 +21,13 @@ public class GameManager : MonoBehaviour
     public GameObject AICharacter;
     public GameObject Player;
     private CharacterController characterController;
+    public GameObject playerCamera;
 
     public int playerCatchCount;
     public List<GameObject> playerList;
     public Transform houseSpawn;
     public GameObject playerMove;
+    public GameObject playerTurn;
     public GameObject[] handRays;
     public static GameObject currentBallHolder;
     public GameObject highestCatchPlayer;
@@ -36,8 +38,14 @@ public class GameManager : MonoBehaviour
     public bool roundOneFinished = false;
     public bool roundTwoFinished = false;
 
+    public GameObject roundOneInstructions;
     public GameObject roundTwoInstructions;
     public GameObject roundThreeInstructions;
+    public AudioSource audioCloseLobby;
+    public GameObject round1Music;
+    public GameObject round2Music;
+    public GameObject round3Music;
+    public GameObject menuMusic;
 
     public GameObject park;
     public GameObject gym;
@@ -62,6 +70,7 @@ public class GameManager : MonoBehaviour
         gym.SetActive(false);
         characterController = Player.GetComponentInChildren<CharacterController>();
         SpawnHumanPlayerInHouse();
+        playerCamera.transform.position = new Vector3(playerCamera.transform.position.x, 1f, playerCamera.transform.position.z);
         
         if (ResearchData.AIPlayers != null && ResearchData.AIPlayers.Count != 0)
         {
@@ -89,8 +98,9 @@ public class GameManager : MonoBehaviour
         Debug.Log("Starting Game");
         currentBallHolder = Player;
         playerCatchCount = 0;
-
-        int level = Random.Range(0, 2);
+        
+        int level = 1;
+        //int level = Random.Range(0, 2);
         Debug.Log(level);
         if (level == 0)
         {
@@ -130,6 +140,8 @@ public class GameManager : MonoBehaviour
                 Debug.Log("LevelPrefabs is null");
             }
         }
+
+        round1Music.SetActive(true);
     }
 
     private void SetupAIPlayers(PlayerData data, int num)
@@ -160,6 +172,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("ReturnedPlayerToHouse");
         fadeScript.fadeToBlack("Lobby Closing...", 3f);
+        audioCloseLobby.PlayOneShot(audioCloseLobby.clip);
         yield return new WaitForSeconds(3f);
 
         SceneManager.LoadScene("CyberballVR");
@@ -188,26 +201,36 @@ public class GameManager : MonoBehaviour
     private void SpawnHumanPlayerInHouse()
     {
         Debug.Log("SpawnHumanPlayerInHouse");
-        Player.transform.position = houseSpawn.position;
-        playerMove.SetActive(true);
+        Player.transform.position = new Vector3(-8.7f, houseSpawn.position.y, -40f);
+        // playerMove.SetActive(true);
+        // playerTurn.SetActive(true);
         playerList.Add(Player);
         Player.transform.Find("PlayerStand").gameObject.SetActive(false);
+        round3Music.SetActive(false);
     }
 
     private void SpawnHumanPlayerInField(Vector3 pos, Quaternion rot)
     {
         Debug.Log("SpawnHumanPlayerInField");
         Player.transform.position = pos;
+        // playerCamera.transform.position = pos;
         characterController.transform.position = pos;
         Player.GetNamedChild("Jimmy").transform.position = pos;
 
         Player.transform.rotation = rot;
         characterController.transform.rotation = rot;
+        characterController.transform.rotation = Quaternion.Euler(0f, 90f, 0f);
+        playerCamera.transform.rotation = rot;
+        // playerCamera.transform.rotation = Quaternion.Euler(0f, -90f, 0f);
   
-        playerMove.SetActive(false);
+        // playerMove.SetActive(false);
+        // playerTurn.SetActive(false);
         // AlternateHandRays(false);
         Player.transform.Find("PlayerStand").gameObject.SetActive(true);   //.GetNamedChild("PlayerStand").SetActive(true);
         // StartCoroutine(SetupBallGM());
+        
+        roundOneInstructions.SetActive(true);
+        menuMusic.SetActive(false);
     }
    
     public void AlternateHandRays(bool flag)
@@ -230,10 +253,17 @@ public class GameManager : MonoBehaviour
     {
         if(roundTwoFinished)
         {
-            currentBallHolder = playerList[UnityEngine.Random.Range(0, playerList.Count)];
+            int randBallReceiver = UnityEngine.Random.Range(0, playerList.Count);
+            currentBallHolder = playerList[randBallReceiver];
+            ResearchData.throwList.RemoveAt(ResearchData.throwList.Count - 1);
+            if(randBallReceiver == 0)
+            {
+                ResearchData.throwList.Add("The player threw the ball to ");
+            }
         } else if(roundOneFinished)
         {
             currentBallHolder = playerList[UnityEngine.Random.Range(1, playerList.Count)];
+            ResearchData.throwList.RemoveAt(ResearchData.throwList.Count - 1);
         }
         StartCoroutine(SetupBallGM());
     }
@@ -298,7 +328,8 @@ public class GameManager : MonoBehaviour
                 Player.transform.position = child.transform.position + new Vector3(0, 0, 0);
                 Player.transform.eulerAngles = new Vector3(0f, 90f, 0f);
                 playerList.Add(Player);
-                playerMove.SetActive(false);
+                // playerMove.SetActive(false);
+                // playerTurn.SetActive(false);
                 Player.transform.Find("PlayerStand").gameObject.SetActive(true);
 
             }
@@ -351,6 +382,8 @@ public class GameManager : MonoBehaviour
                 {
                     roundOneFinished = true;
                     roundTwoInstructions.SetActive(true);
+                    round1Music.SetActive(false);
+                    round2Music.SetActive(true);
                 }
             }
         }

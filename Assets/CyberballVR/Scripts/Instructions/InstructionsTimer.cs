@@ -11,6 +11,7 @@ public class InstructionsTimer : MonoBehaviour
     public GameObject okButton;
     public GameObject waitingForPlayers;
     public BallManager ballManager;
+    public AudioSource audioRoundInstructions;
 
     void OnEnable()
     {
@@ -21,6 +22,7 @@ public class InstructionsTimer : MonoBehaviour
         okButton.SetActive(true);
         waitingForPlayers.SetActive(false);
         gameManager.AlternateHandRays(true);
+        audioRoundInstructions.PlayOneShot(audioRoundInstructions.clip);
     }
 
     // Update is called once per frame

@@ -39,6 +39,7 @@ public class TutorialBall : MonoBehaviour
         else if(collision.transform.CompareTag("Ground") && TutorialManager.tutorialState != TutorialManager.State.Throwing)
         {
             EventManager.onBallDropped?.Invoke();
+            // this.gameObject.SetActive(false);
         }
     }
 

@@ -7391,7 +7391,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6398219104727968826}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 0}
   m_CullingMode: 0
@@ -7464,6 +7464,9 @@ MonoBehaviour:
   launchAngle: 35
   rotationSpeed: 5
   catchCount: 0
+  playerNum: 0
+  aiAnimator: {fileID: 1179255038047418661}
+  catchChance: 0
   targetingPreference: 0
 --- !u!65 &7711225824740117770
 BoxCollider:
@@ -10850,6 +10853,7 @@ GameObject:
   - component: {fileID: 633512679970234403}
   - component: {fileID: 3616036505009333662}
   - component: {fileID: 3637124913342513730}
+  - component: {fileID: 1179255038047418661}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -10926,6 +10930,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!95 &1179255038047418661
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8586655294233514834}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 04b5be64f5de5a2428e7d08865ee7118, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8710313549642860649
 GameObject:
   m_ObjectHideFlags: 0
