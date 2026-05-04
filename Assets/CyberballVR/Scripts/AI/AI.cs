@@ -239,6 +239,7 @@ public class AI : MonoBehaviour
             }
             else
             {
+                ball.SetActive(false);
                 ResearchData.saveLog();
                 gameManager.StartCoroutine("returnPlayerToHouse"); //starts a coroutine in the Game Manager that sends the player home 
             }

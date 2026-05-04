@@ -12,6 +12,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public GameObject[] levelPrefabs;
+    public GameObject ballObject;
     public BallManager ballManager;
     public GameObject currentLevel;
     public XRGrabInteractable ball;
@@ -71,7 +72,7 @@ public class GameManager : MonoBehaviour
         gym.SetActive(false);
         characterController = Player.GetComponentInChildren<CharacterController>();
         SpawnHumanPlayerInHouse();
-        playerCamera.transform.position = new Vector3(playerCamera.transform.position.x, 1f, playerCamera.transform.position.z);
+        playerCamera.transform.position = new Vector3(playerCamera.transform.position.x, 0.5f, playerCamera.transform.position.z);
         
         if (ResearchData.AIPlayers != null && ResearchData.AIPlayers.Count != 0)
         {
@@ -216,7 +217,7 @@ public class GameManager : MonoBehaviour
     private void SpawnHumanPlayerInHouse()
     {
         Debug.Log("SpawnHumanPlayerInHouse");
-        Player.transform.position = new Vector3(-8.7f, houseSpawn.position.y, -40f);
+        Player.transform.position = new Vector3(-8.7f, 1f, -40f);
         // playerMove.SetActive(true);
         // playerTurn.SetActive(true);
         playerList.Add(Player);
@@ -399,6 +400,13 @@ public class GameManager : MonoBehaviour
                     roundTwoInstructions.SetActive(true);
                     round1Music.SetActive(false);
                     round2Music.SetActive(true);
+                }
+
+                if(TrackAllCatches() == ResearchData.LevelData.NoOfThrows)
+                {
+                    ballObject.SetActive(false);
+                    ResearchData.saveLog();
+                    StartCoroutine("returnPlayerToHouse");
                 }
             }
         }
