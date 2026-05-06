@@ -14,7 +14,7 @@ public class ResearchData : MonoBehaviour
     [SerializeField]
     public static LevelData LevelData { get; private set; }
 
-    public static List<string> namePool = new List<string> {"Jordan", "Morgan", "Taylor", "Sam", "Carter", "Alex", "Harper", "Riley", "Avery", "Parker"};
+    public static List<string> namePool = new List<string> {"JORDAN", "MORGAN", "TAYLOR", "SAM", "CARTER", "ALEX", "HARPER", "RILEY", "AVERY", "PARKER"};
 
     
     private void Awake()
